@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>DVD 在庫管理</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f5f5f5;
+      padding: 40px;
+    }
+
+    .container {
+      max-width: 650px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      margin-bottom: 40px;
+    }
+
+    h2, h3 {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 15px;
+      box-sizing: border-box;
+    }
+
+    button {
+      display: block;
+      margin: 20px auto;
+      padding: 12px 40px;
+      background: #3a5e9c;
+      color: #fff;
+      border: none;
+      border-radius: 500px;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #3a6bc0;
+    }
+
+    .btnSmall {
+      padding: 5px 12px;
+      font-size: 14px;
+      border-radius: 6px;
+      margin: 0 4px;
+      cursor: pointer;
+      color: #fff;
+      border: none;
+    }
+
+    .plusBtn { background: #28b745; }
+    .plusBtn:hover { background: #32cf54; }
+
+    .minusBtn { background: #b72828; }
+    .minusBtn:hover { background: #d83b3b; }
+
+    .delBtn { background: #444; }
+    .delBtn:hover { background: #666; }
+
+    .regDeleteBtn { background: #b72828; }
+    .regDeleteBtn:hover { background: #d83b3b; }
+
+    .result, .success {
+      margin-top: 25px;
+      padding: 15px;
+      border-radius: 8px;
+      display: none;
+    }
+
+    .result { background: #f0f4ff; }
+    .success {
+      background: #e2ffe5;
+      color: #0a7a20;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 15px;
+    }
+
+    th, td {
+      border-bottom: 1px solid #ddd;
+      padding: 10px;
+      text-align: center;
+    }
+
+    th { background: #eef3ff; }
+
+  </style>
+</head>
+<body>
+
+  <!-- ▼ 在庫検索フォーム -->
+  <div class="container">
+    <h2>DVD 在庫検索</h2>
+
+    <label>タイトル名</label>
+    <input type="text" id="title" placeholder="例：君の名は。">
+
+    <label>ジャンル</label>
+    <select id="genre">
+      <option value="">指定なし</option>
+      <option value="アクション">アクション</option>
+      <option value="SF">SF</option>
+      <option value="恋愛">恋愛</option>
+      <option value="ホラー">ホラー</option>
+      <option value="アニメ">アニメ</option>
+    </select>
+
+    <button id="searchBtn">検索する</button>
+
+    <div class="result" id="resultBox">
+      <h3>検索結果</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>タイトル</th>
+            <th>在庫数</th>
+            <th>棚番号</th>
+            <th>操作</th>
+            <th>削除</th>
+          </tr>
+        </thead>
+        <tbody id="resultBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+
+  <!-- ▼ 在庫登録フォーム（新規：削除ボタン追加） -->
+  <div class="container">
+    <h2>在庫登録 / 削除</h2>
+
+    <label>タイトル名</label>
+    <input type="text" id="regTitle" placeholder="例：千と千尋の神隠し">
+
+    <label>ジャンル</label>
+    <select id="regGenre">
+      <option value="アクション">アクション</option>
+      <option value="SF">SF</option>
+      <option value="恋愛">恋愛</option>
+      <option value="ホラー">ホラー</option>
+      <option value="アニメ">アニメ</option>
+    </select>
+
+    <label>JANコード</label>
+    <input type="text" id="regJan" placeholder="例：4987654321098">
+
+    <button id="registerBtn">登録する</button>
+
+    <!-- ▼ 新規追加：登録画面で削除できる機能 -->
+    <button class="regDeleteBtn" id="deleteByNameBtn">タイトル名で削除</button>
+
+    <div class="success" id="regSuccess">処理が完了しました！</div>
+  </div>
+
+
+  <script>
+    // ▼ 在庫データ（id 付き）
+    const dvdData = [
+      { id: 1, title: "君の名は。", genre: "アニメ", qty: 4, shelf: "A-01" },
+      { id: 2, title: "天気の子", genre: "アニメ", qty: 2, shelf: "A-02" },
+      { id: 3, title: "ジョン・ウィック", genre: "アクション", qty: 5, shelf: "B-05" },
+      { id: 4, title: "マトリックス", genre: "SF", qty: 3, shelf: "C-03" },
+      { id: 5, title: "リング", genre: "ホラー", qty: 1, shelf: "D-01" },
+      { id: 6, title: "ラ・ラ・ランド", genre: "恋愛", qty: 6, shelf: "E-04" }
+    ];
+    let nextId = 7;
+
+
+    /* ▼ 表の再描画 */
+    function renderTable(list) {
+      const tbody = document.getElementById("resultBody");
+      tbody.innerHTML = "";
+
+      if (list.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5">該当データがありません</td></tr>`;
+        return;
+      }
+
+      list.forEach(item => {
+        tbody.innerHTML += `
+          <tr>
+            <td>${item.title}</td>
+            <td>${item.qty}</td>
+            <td>${item.shelf}</td>
+            <td>
+              <button class="btnSmall plusBtn" onclick="changeQty(${item.id}, 1)">＋</button>
+              <button class="btnSmall minusBtn" onclick="changeQty(${item.id}, -1)">−</button>
+            </td>
+            <td>
+              <button class="btnSmall delBtn" onclick="deleteItem(${item.id})">削除</button>
+            </td>
+          </tr>
+        `;
+      });
+
+      document.getElementById("resultBox").style.display = "block";
+    }
+
+
+    /* ▼ 検索処理 */
+    document.getElementById("searchBtn").addEventListener("click", () => {
+      const t = document.getElementById("title").value.trim();
+      const g = document.getElementById("genre").value;
+
+      const filtered = dvdData.filter(item =>
+        (t === "" || item.title.includes(t)) &&
+        (g === "" || item.genre === g)
+      );
+
+      renderTable(filtered);
+    });
+
+
+    /* ▼ 在庫増減 */
+    function changeQty(id, amount) {
+      const item = dvdData.find(i => i.id === id);
+      if (!item) return;
+
+      item.qty += amount;
+      if (item.qty < 0) item.qty = 0;
+
+      document.getElementById("searchBtn").click();
+    }
+
+
+    /* ▼ 行の削除 */
+    function deleteItem(id) {
+      const idx = dvdData.findIndex(i => i.id === id);
+      if (idx !== -1) dvdData.splice(idx, 1);
+
+      alert("削除しました！");
+      document.getElementById("searchBtn").click();
+    }
+
+    window.changeQty = changeQty;
+    window.deleteItem = deleteItem;
+
+
+    /* ▼ 新規登録 */
+    document.getElementById("registerBtn").addEventListener("click", () => {
+      const title = document.getElementById("regTitle").value.trim();
+      const genre = document.getElementById("regGenre").value;
+      const jan = document.getElementById("regJan").value.trim();
+
+      if (!title || !jan) {
+        alert("タイトルとJANコードは必須です！");
+        return;
+      }
+
+      dvdData.push({
+        id: nextId++,
+        title: title,
+        genre: genre,
+        qty: 1,
+        shelf: "NEW"
+      });
+
+      document.getElementById("regSuccess").innerText = "登録しました！";
+      document.getElementById("regSuccess").style.display = "block";
+
+      document.getElementById("regTitle").value = "";
+      document.getElementById("regJan").value = "";
+    });
+
+
+    /* ▼ ★ 新規追加：タイトル名で削除する機能 */
+    document.getElementById("deleteByNa

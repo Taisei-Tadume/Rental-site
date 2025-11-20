@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>新規会員登録</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f5f5f5;
+      padding: 40px;
+    }
+
+      *:focus {
+    outline: none;
+  }
+
+    .container {
+      width: 400px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 14px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 15px;
+    }
+
+    .error {
+      color: rgb(110, 22, 22);
+      font-size: 13px;
+      margin-top: -10px;
+      margin-bottom: 10px;
+    }
+
+    button {
+      
+      width: 75%;
+      padding: 10px;
+      background: #3a5e9c;
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      font-size: 18px;
+      cursor: pointer;
+      
+    }
+
+    button:hover {
+      background: #3a6bc0;
+    }
+
+    .success {
+      text-align: center;
+      color: green;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h2>新規会員登録</h2>
+
+    <form id="signup-form">
+
+  <label>ユーザー名</label>
+  <input type="text" id="username">
+  <div class="error" id="err-username"></div>
+
+  <label>メールアドレス</label>
+  <input type="email" id="email">
+  <div class="error" id="err-email"></div>
+
+  <label>パスワード</label>
+  <input type="password" id="password">
+  <div class="error" id="err-password"></div>
+
+  <!-- ★ここに中央寄せのdivを追加 -->
+  <div style="text-align: center;">
+    <button type="submit">登録する</button>
+  </div>
+    <br>
+    <br>
+<div style="text-align: right;">
+  <span>会員登録済みの方はこちら</span>
+</div>
+
+<div style="text-align: right;">
+  <a href="/login" style="color: #0062ff; text-decoration: none; cursor: pointer;">
+    ログイン
+  </a>
+</div>
+
+
+</form>
+
+
+    <div class="success" id="success-msg"></div>
+  </div>
+
+  <script>
+    const form = document.getElementById("signup-form");
+
+    form.addEventListener("submit", (e) => {
+      // ページ遷移によるフォーム送信を一旦止める（JSで処理するため）
+      e.preventDefault();
+
+      // エラーメッセージ初期化
+      document.getElementById("err-username").textContent = "";
+      document.getElementById("err-email").textContent = "";
+      document.getElementById("err-password").textContent = "";
+      document.getElementById("success-msg").textContent = "";
+
+      const username = document.getElementById("username").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+
+      let hasError = false;
+
+      // ユーザー名チェック
+      if (!username) {
+        document.getElementById("err-username").textContent = "ユーザー名は必須です。";
+        hasError = true;
+      }
+
+      // メールアドレスチェック
+      if (!email) {
+        document.getElementById("err-email").textContent = "メールアドレスは必須です。";
+        hasError = true;
+      } else if (!email.includes("@")) {
+        document.getElementById("err-email").textContent = "メールアドレスの形式が正しくありません。";
+        hasError = true;
+      }
+
+      // パスワードチェック
+      if (!password) {
+        document.getElementById("err-password").textContent = "パスワードは必須です。";
+        hasError = true;
+      } else if (password.length < 6) {
+        document.getElementById("err-password").textContent = "パスワードは6文字以上で入力してください。";
+        hasError = true;
+      }
+
+      // エラーがない場合の処理
+      if (!hasError) {
+        document.getElementById("success-msg").textContent = "登録が完了しました。";
+      }
+    });
+  </script>
+
+</body>
+</html>

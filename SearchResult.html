@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>検索結果 - Music Life Agency</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f7f7f7;
+        }
+
+        /* Header */
+        header {
+            background-color: #222;
+            color: #fff;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        nav a {
+            color: #fff;
+            margin-left: 15px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        /* Main */
+        main {
+            padding: 20px;
+        }
+
+        /* Search Form */
+        .search-box {
+            background: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .search-box input[type="text"] {
+            width: 70%;
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        .search-box button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+
+        /* Content layout: left filter + right results */
+        .content-area {
+            display: flex;
+            gap: 20px;
+        }
+
+        /* Left Filter */
+        .filter-box {
+            width: 230px;
+            background: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            height: fit-content;
+        }
+
+        .filter-box h3 {
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+        .filter-box label {
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        /* Right Results */
+        .result-area {
+            flex: 1;
+        }
+
+        .result-summary {
+            background: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+
+        /* Sort Box */
+        .sort-box {
+            margin-bottom: 15px;
+            text-align: right;
+        }
+
+        .items {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .item {
+            background: #fff;
+            padding: 15px;
+            width: 200px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .item img {
+            width: 100%;
+            height: auto;
+            border-radius: 4px;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            margin-top: 40px;
+            text-align: center;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header>
+        <h1>Music Life Agency</h1>
+        <nav>
+            <a href="signup.html">新規会員登録</a>
+            <a href="login.html">ログイン</a>
+            <a href="cart.html">カート</a>
+        </nav>
+    </header>
+
+    <main>
+
+        <!-- Search Form (保持) -->
+        <div class="search-box">
+            <form action="#" method="GET">
+                <input type="text" name="keyword" placeholder="作品名・アーティスト名で検索">
+                <button type="submit">検索</button>
+            </form>
+        </div>
+
+        <div class="content-area">
+
+            <!-- Left Filter -->
+            <div class="filter-box">
+                <h3>絞り込み</h3>
+
+                <strong>メディア種別</strong>
+                <label><input type="checkbox"> DVD</label>
+                <label><input type="checkbox"> CD</label>
+                <label><input type="checkbox"> Blu-ray</label>
+                <br>
+
+                <strong>ジャンル</strong>
+                <label><input type="checkbox"> 映画</label>
+                <label><input type="checkbox"> 音楽</label>
+                <label><input type="checkbox"> アニメ</label>
+                <label><input type="checkbox"> ドラマ</label>
+                <br>
+
+                <strong>価格帯</strong>
+                <label><input type="checkbox"> 〜500円</label>
+                <label><input type="checkbox"> 500〜1,000円</label>
+                <label><input type="checkbox"> 1,000〜2,000円</label>
+                <label><input type="checkbox"> 2,000円〜</label>
+                <br>
+
+                <strong>発売年</strong>
+                <label><input type="checkbox"> 〜2000年</label>
+                <label><input type="checkbox"> 2000〜2010年</label>
+                <label><input type="checkbox"> 2010年〜2020年</label>
+                <label><input type="checkbox"> 2020年〜</label>
+            
+            </div>
+
+            <!-- Right Results Area -->
+            <div class="result-area">
+
+                <div class="result-summary">
+                    「〇〇〇」の検索結果：3件ヒット
+                </div>
+
+                <!-- Sort -->
+                <div class="sort-box">
+                    並び替え：
+                    <select>
+                        <option>新着順</option>
+                        <option>人気順</option>
+                        <option>五十音順</option>
+                        <option>価格が安い順</option>
+                        <option>価格が高い順</option>
+                    </select>
+                </div>
+
+                <!-- Result Items -->
+                <div class="items">
+
+                    <div class="item">
+                        <img src="img/sample1.jpg" alt="DVD">
+                        <p>映画タイトル A（DVD）</p>
+                    </div>
+
+                    <div class="item">
+                        <img src="img/sample2.jpg" alt="CD">
+                        <p>アーティスト名 B（CD）</p>
+                    </div>
+
+                    <div class="item">
+                        <img src="img/sample3.jpg" alt="DVD">
+                        <p>映画タイトル C（DVD）</p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>
+            株式会社 Music Life Agency<br>
+            東京都渋谷区代々木2-9-2 久保ビル4F<br>
+            営業時間　本社：9:00〜18:00　店舗：24時間
+        </p>
+    </footer>
+</body>
+</html>
